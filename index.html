@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Strategy Co. — Expert AI Consultancy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --blue: #2563EB; --blue-dark: #1d4ed8; --blue-light: #eff6ff;
+      --text: #0f172a; --muted: #64748b; --border: #e2e8f0; --white: #ffffff;
+      --green: #16a34a; --green-light: #f0fdf4; --red: #dc2626;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Manrope', sans-serif; background: var(--white); color: var(--text); line-height: 1.6; }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      background: rgba(255,255,255,0.92); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border); z-index: 100;
+      padding: 0 2rem; height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo { font-weight: 800; font-size: 1.1rem; letter-spacing: -0.02em; }
+    .nav-logo span { color: var(--blue); }
+    .nav-right { display: flex; align-items: center; gap: 0.75rem; }
+    .nav-cta { background: var(--blue); color: #fff; padding: 0.5rem 1.25rem; border-radius: 8px; font-weight: 600; font-size: 0.875rem; text-decoration: none; transition: background 0.2s; }
+    .nav-cta:hover { background: var(--blue-dark); }
+    .admin-btn { background: none; border: 1px solid var(--border); color: var(--muted); padding: 0.45rem 0.9rem; border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; font-family: inherit; transition: all 0.2s; }
+    .admin-btn:hover { border-color: var(--blue); color: var(--blue); }
+
+    .hero { padding: 140px 2rem 100px; text-align: center; max-width: 760px; margin: 0 auto; animation: fadeUp 0.7s ease both; }
+    .hero-badge { display: inline-flex; align-items: center; gap: 0.4rem; background: var(--blue-light); color: var(--blue); padding: 0.35rem 0.9rem; border-radius: 100px; font-size: 0.8rem; font-weight: 600; margin-bottom: 1.5rem; }
+    .hero-badge::before { content: ''; width: 7px; height: 7px; background: var(--blue); border-radius: 50%; animation: pulse 2s infinite; }
+    h1 { font-size: clamp(2.4rem, 6vw, 3.8rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.12; margin-bottom: 1.25rem; }
+    h1 span { color: var(--blue); }
+    .hero-sub { font-size: 1.1rem; color: var(--muted); max-width: 540px; margin: 0 auto 2.5rem; line-height: 1.7; }
+    .btn-primary { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--blue); color: #fff; padding: 0.9rem 2rem; border-radius: 10px; font-weight: 700; font-size: 1rem; text-decoration: none; transition: all 0.2s; box-shadow: 0 4px 20px rgba(37,99,235,0.3); cursor: pointer; border: none; font-family: inherit; }
+    .btn-primary:hover { background: var(--blue-dark); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(37,99,235,0.4); }
+    .btn-primary:disabled { opacity: 0.6; transform: none; cursor: not-allowed; }
+
+    .trust-bar { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 1.25rem 2rem; display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap; }
+    .trust-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: var(--muted); font-weight: 500; }
+    .trust-item svg { color: var(--blue); flex-shrink: 0; }
+
+    .section { max-width: 1000px; margin: 0 auto; padding: 80px 2rem; }
+    .section-label { text-align: center; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--blue); margin-bottom: 0.75rem; }
+    h2 { text-align: center; font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; letter-spacing: -0.025em; margin-bottom: 0.75rem; line-height: 1.2; }
+    .section-sub { text-align: center; color: var(--muted); font-size: 1rem; max-width: 500px; margin: 0 auto 3rem; line-height: 1.7; }
+
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem; }
+    .card { border: 1px solid var(--border); border-radius: 14px; padding: 1.75rem; transition: all 0.2s; }
+    .card:hover { border-color: var(--blue); box-shadow: 0 4px 24px rgba(37,99,235,0.1); transform: translateY(-2px); }
+    .card-icon { width: 44px; height: 44px; border-radius: 10px; background: var(--blue-light); display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; color: var(--blue); }
+    .card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .card p { font-size: 0.9rem; color: var(--muted); line-height: 1.6; }
+
+    .pricing-wrapper { background: var(--blue-light); border-radius: 20px; padding: 60px 2rem; }
+    .pricing-card { background: var(--white); border: 2px solid var(--blue); border-radius: 16px; padding: 2.5rem; max-width: 460px; margin: 0 auto; text-align: center; box-shadow: 0 8px 40px rgba(37,99,235,0.15); }
+    .pricing-label { display: inline-block; background: var(--blue); color: #fff; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; padding: 0.3rem 0.8rem; border-radius: 100px; margin-bottom: 1.25rem; }
+    .price { font-size: 3rem; font-weight: 800; letter-spacing: -0.04em; line-height: 1; margin-bottom: 0.25rem; }
+    .price-note { font-size: 0.875rem; color: var(--muted); margin-bottom: 1.75rem; }
+    .features-list { list-style: none; text-align: left; margin-bottom: 2rem; }
+    .features-list li { display: flex; align-items: flex-start; gap: 0.6rem; padding: 0.6rem 0; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+    .features-list li:last-child { border-bottom: none; }
+    .features-list li svg { color: var(--blue); flex-shrink: 0; margin-top: 2px; }
+
+    .flow { display: flex; align-items: flex-start; justify-content: center; flex-wrap: wrap; margin-top: 3rem; }
+    .flow-step { display: flex; flex-direction: column; align-items: center; text-align: center; max-width: 180px; }
+    .step-num { width: 44px; height: 44px; border-radius: 50%; background: var(--blue); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1rem; margin-bottom: 0.75rem; }
+    .flow-step h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.3rem; }
+    .flow-step p { font-size: 0.8rem; color: var(--muted); }
+    .flow-arrow { color: var(--border); align-self: center; margin: 0 0.5rem 2rem; font-size: 1.5rem; }
+
+    /* ── Payment verification box ── */
+    #verify-box {
+      display: none; background: #fff; border: 2px solid var(--border);
+      border-radius: 16px; padding: 2rem; max-width: 460px; margin: 2rem auto 0;
+      text-align: center;
+    }
+    #verify-box.visible { display: block; animation: fadeUp 0.4s ease both; }
+    #verify-box h3 { font-size: 1.15rem; font-weight: 800; margin-bottom: 0.4rem; }
+    #verify-box p { color: var(--muted); font-size: 0.88rem; margin-bottom: 1.25rem; line-height: 1.6; }
+    .verify-input-row { display: flex; gap: 0.5rem; }
+    .verify-input-row input { flex: 1; padding: 0.7rem 0.9rem; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; font-size: 0.9rem; outline: none; transition: border-color 0.2s; }
+    .verify-input-row input:focus { border-color: var(--blue); }
+    .verify-status { margin-top: 0.75rem; font-size: 0.85rem; font-weight: 600; min-height: 1.2em; }
+    .verify-status.checking { color: var(--muted); }
+    .verify-status.error { color: var(--red); }
+
+    #booking-section { display: none; background: #fff; border: 2px solid var(--green); border-radius: 20px; padding: 3rem 2rem; max-width: 520px; margin: 2rem auto 0; text-align: center; box-shadow: 0 8px 40px rgba(22,163,74,0.12); }
+    #booking-section.visible { display: block; animation: fadeUp 0.5s ease both; }
+    #booking-section h3 { font-size: 1.5rem; font-weight: 800; margin-bottom: 0.5rem; }
+    #booking-section p { color: var(--muted); margin-bottom: 1.75rem; font-size: 0.95rem; }
+    .btn-zoom { display: inline-flex; align-items: center; gap: 0.6rem; background: #2D8CFF; color: #fff; padding: 0.9rem 2rem; border-radius: 10px; font-weight: 700; font-size: 1rem; text-decoration: none; transition: all 0.2s; box-shadow: 0 4px 16px rgba(45,140,255,0.35); }
+    .btn-zoom:hover { background: #1a7ae8; transform: translateY(-2px); }
+
+    footer { text-align: center; padding: 2.5rem; border-top: 1px solid var(--border); font-size: 0.85rem; color: var(--muted); }
+
+    /* ── ADMIN ── */
+    .overlay { display: none; position: fixed; inset: 0; z-index: 999; background: rgba(15,23,42,0.65); backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 1rem; }
+    .overlay.open { display: flex; }
+    .login-modal { background: #fff; border-radius: 16px; padding: 2.5rem; width: 100%; max-width: 380px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); animation: fadeUp 0.3s ease; }
+    .login-modal h3 { font-size: 1.3rem; font-weight: 800; margin-bottom: 0.4rem; }
+    .login-modal p { color: var(--muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; font-size: 0.8rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .form-group input, .form-group textarea { width: 100%; padding: 0.7rem 0.9rem; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; font-size: 0.9rem; outline: none; transition: border-color 0.2s; resize: vertical; }
+    .form-group input:focus, .form-group textarea:focus { border-color: var(--blue); }
+    .btn-full { width: 100%; padding: 0.8rem; background: var(--blue); color: #fff; border: none; border-radius: 8px; font-family: inherit; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background 0.2s; }
+    .btn-full:hover { background: var(--blue-dark); }
+    .err { color: var(--red); font-size: 0.83rem; margin-top: 0.5rem; display: none; }
+
+    .admin-panel { background: #fff; border-radius: 16px; width: 100%; max-width: 840px; max-height: 92vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.2); animation: fadeUp 0.3s ease; }
+    .admin-header { display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 2rem; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: #fff; z-index: 10; }
+    .admin-header h3 { font-size: 1.1rem; font-weight: 800; }
+    .close-btn { background: none; border: none; cursor: pointer; color: var(--muted); font-size: 1.3rem; padding: 0.2rem; }
+    .close-btn:hover { color: var(--text); }
+    .admin-tabs { display: flex; border-bottom: 1px solid var(--border); padding: 0 2rem; gap: 0.25rem; }
+    .tab-btn { padding: 0.85rem 1.1rem; font-family: inherit; font-size: 0.875rem; font-weight: 600; background: none; border: none; border-bottom: 2px solid transparent; cursor: pointer; color: var(--muted); margin-bottom: -1px; transition: all 0.15s; }
+    .tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
+    .tab-pane { display: none; padding: 2rem; }
+    .tab-pane.active { display: block; }
+    .edit-group { margin-bottom: 1rem; }
+    .edit-group label { display: block; font-size: 0.75rem; font-weight: 700; margin-bottom: 0.35rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+    .edit-group input, .edit-group textarea { width: 100%; padding: 0.65rem 0.85rem; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; font-size: 0.875rem; outline: none; transition: border-color 0.2s; resize: vertical; }
+    .edit-group input:focus, .edit-group textarea:focus { border-color: var(--blue); }
+    .esec { font-size: 0.9rem; font-weight: 700; margin: 1.5rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    .save-bar { display: flex; justify-content: flex-end; align-items: center; gap: 0.75rem; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+    .btn-save { padding: 0.65rem 1.4rem; background: var(--blue); color: #fff; border: none; border-radius: 8px; font-family: inherit; font-weight: 700; font-size: 0.875rem; cursor: pointer; }
+    .btn-save:hover { background: var(--blue-dark); }
+    .btn-ghost { padding: 0.65rem 1.2rem; background: none; color: var(--muted); border: 1px solid var(--border); border-radius: 8px; font-family: inherit; font-weight: 600; font-size: 0.875rem; cursor: pointer; }
+    .btn-ghost:hover { color: var(--text); border-color: var(--text); }
+    .toast { font-size: 0.85rem; color: var(--green); font-weight: 600; opacity: 0; transition: opacity 0.3s; }
+    .toast.show { opacity: 1; }
+    .stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; margin-bottom: 1.75rem; }
+    .stat-box { background: var(--blue-light); border-radius: 12px; padding: 1.25rem; text-align: center; }
+    .stat-box .n { font-size: 2rem; font-weight: 800; color: var(--blue); line-height: 1; }
+    .stat-box .l { font-size: 0.78rem; color: var(--muted); font-weight: 600; margin-top: 0.3rem; }
+    .reg-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+    .reg-table th { text-align: left; padding: 0.6rem 0.75rem; background: #f8fafc; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); border-bottom: 1px solid var(--border); }
+    .reg-table td { padding: 0.75rem; border-bottom: 1px solid var(--border); }
+    .reg-table tr:last-child td { border-bottom: none; }
+    .badge-paid { display: inline-block; background: var(--green-light); color: var(--green); padding: 0.2rem 0.6rem; border-radius: 100px; font-size: 0.75rem; font-weight: 700; }
+    .empty-reg { text-align: center; padding: 3rem 1rem; color: var(--muted); }
+    .info-box { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 10px; padding: 1rem 1.25rem; font-size: 0.85rem; line-height: 1.65; margin-bottom: 1.5rem; }
+    .info-box code { background: #fff; padding: 0.15rem 0.45rem; border-radius: 4px; font-size: 0.8rem; word-break: break-all; display: inline-block; margin-top: 0.25rem; }
+    .warn-box { background: #fefce8; border: 1px solid #fde047; border-radius: 10px; padding: 1rem 1.25rem; font-size: 0.85rem; line-height: 1.65; margin-bottom: 1.5rem; }
+    .live-badge { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.75rem; font-weight: 700; color: var(--green); background: var(--green-light); padding: 0.2rem 0.6rem; border-radius: 100px; }
+    .live-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+    .inp-inline { width: 100%; padding: 0.65rem 0.85rem; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; font-size: 0.875rem; outline: none; }
+    .inp-inline:focus { border-color: var(--blue); }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+    @media(max-width:600px){ .flow-arrow{display:none;} .two-col{grid-template-columns:1fr;} .stats{grid-template-columns:1fr 1fr;} .verify-input-row{flex-direction:column;} }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo" id="nav-logo">AI<span>Strategy</span>.co</div>
+  <div class="nav-right">
+    <button class="admin-btn" onclick="openAdmin()">⚙ Admin</button>
+    <a href="#pricing" class="nav-cta">Get started →</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-badge" id="el-badge">Now accepting new clients</div>
+  <h1 id="el-h1">The power of one<br><span id="el-accent">AI consultancy</span></h1>
+  <p class="hero-sub" id="el-sub">Hands-on AI strategy, implementation, and transformation for ambitious businesses. Tailored to your goals, powered by real expertise.</p>
+  <a href="#pricing" class="btn-primary">Get started <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+</div>
+
+<div class="trust-bar">
+  <div class="trust-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Confidential & secure</div>
+  <div class="trust-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>60-min session</div>
+  <div class="trust-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>1-on-1 expert</div>
+  <div class="trust-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Actionable outcomes</div>
+</div>
+
+<div class="section">
+  <p class="section-label">What's included</p>
+  <h2 id="el-ftitle">Everything you need to move fast with AI</h2>
+  <p class="section-sub" id="el-fsub">One focused session, zero fluff. Walk away with a clear roadmap you can act on immediately.</p>
+  <div class="cards">
+    <div class="card"><div class="card-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4"/></svg></div><h3 id="c1t">AI Strategy Audit</h3><p id="c1d">A full review of where AI can create the most leverage in your business — prioritised and ranked.</p></div>
+    <div class="card"><div class="card-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><h3 id="c2t">90-Day Roadmap</h3><p id="c2d">A concrete plan with tools, timelines, and quick wins to start generating ROI within weeks.</p></div>
+    <div class="card"><div class="card-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><h3 id="c3t">Tool Selection</h3><p id="c3d">Cut through the noise. Get clear recommendations on the right AI tools for your stack and budget.</p></div>
+    <div class="card"><div class="card-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><h3 id="c4t">Post-Session Support</h3><p id="c4d">A written summary plus 7 days of follow-up questions via email.</p></div>
+    <div class="card"><div class="card-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div><h3 id="c5t">Prompt Engineering</h3><p id="c5d">Custom prompts and workflows built live during the call that you can deploy immediately.</p></div>
+    <div class="card"><div class="card-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div><h3 id="c6t">Implementation Plan</h3><p id="c6d">Step-by-step guidance your team can follow — no PhD in AI required.</p></div>
+  </div>
+</div>
+
+<div class="section" id="pricing">
+  <p class="section-label">Pricing</p>
+  <h2>Simple, transparent pricing</h2>
+  <p class="section-sub">One session, one price. No retainers, no surprises.</p>
+  <div class="flow">
+    <div class="flow-step"><div class="step-num">1</div><h4>Pay via Fire</h4><p>Secure open banking checkout</p></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="step-num">2</div><h4>Enter your email</h4><p>We verify your payment</p></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="step-num">3</div><h4>Book your slot</h4><p>Pick a time on Zoom</p></div>
+  </div>
+  <div style="height:3rem"></div>
+
+  <div class="pricing-wrapper">
+    <div class="pricing-card">
+      <div class="pricing-label">Strategy Session</div>
+      <div class="price" id="el-price">£60</div>
+      <p class="price-note" id="el-pnote">One-time payment · 60-minute Zoom call</p>
+      <ul class="features-list">
+        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span id="f1">AI Strategy Audit for your business</span></li>
+        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span id="f2">Custom 90-day AI roadmap</span></li>
+        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span id="f3">Tool recommendations & prompt templates</span></li>
+        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span id="f4">Written session summary after call</span></li>
+        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span id="f5">7 days email follow-up support</span></li>
+      </ul>
+      <a id="pay-btn" href="https://payments.fire.com/jqwb3y99" target="_blank" class="btn-primary" style="width:100%;justify-content:center;font-size:1.05rem;" onclick="onPayClick()">
+        Pay now — <span id="pay-price">£60</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      </a>
+      <p style="font-size:0.78rem;color:var(--muted);margin-top:0.75rem;">🔒 Secure payment via Fire Open Banking</p>
+    </div>
+  </div>
+
+  <!-- Step 2: Email verification after payment -->
+  <div id="verify-box">
+    <div style="font-size:1.75rem;margin-bottom:0.5rem">💳</div>
+    <h3>Already paid? Unlock your booking</h3>
+    <p>Enter the email you used when paying. We'll check your payment and unlock your Zoom booking link instantly.</p>
+    <div class="verify-input-row">
+      <input type="email" id="verify-email" placeholder="your@email.com" onkeydown="if(event.key==='Enter')checkPayment()"/>
+      <button class="btn-primary" id="verify-btn" onclick="checkPayment()" style="white-space:nowrap;padding:0.7rem 1.25rem;">
+        Verify →
+      </button>
+    </div>
+    <div class="verify-status" id="verify-status"></div>
+  </div>
+
+  <!-- Step 3: Booking (shown after verified) -->
+  <div id="booking-section">
+    <div style="font-size:2.5rem;margin-bottom:0.75rem">✅</div>
+    <h3 id="booking-title">Payment confirmed — you're in!</h3>
+    <p id="el-booking-msg">Now pick your time slot and we'll get a Zoom invite in your inbox straight away.</p>
+    <a id="zoom-link" href="YOUR_ZOOM_LINK" target="_blank" class="btn-zoom">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M15 10l4.553-2.069A1 1 0 0 1 21 8.87v6.26a1 1 0 0 1-1.447.939L15 14M3 8a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8z"/></svg>
+      Book my Zoom session →
+    </a>
+    <p style="margin-top:1rem;font-size:0.8rem;color:var(--muted);">Can't find a suitable time? Email us and we'll sort it out.</p>
+  </div>
+</div>
+
+<footer>
+  <p style="font-weight:700;margin-bottom:0.3rem;" id="el-fbrand">AIStrategy.co</p>
+  <p id="el-ftext">© 2026 · All rights reserved · hello@aistrategy.co</p>
+</footer>
+
+<!-- ══ ADMIN OVERLAY ══ -->
+<div class="overlay" id="overlay" onclick="bgClick(event)">
+  <div class="login-modal" id="login-modal">
+    <h3>🔐 Admin Login</h3>
+    <p>Enter your password to manage this page.</p>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="pw-input" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()"/>
+      <div class="err" id="pw-err">Incorrect password. Try again.</div>
+    </div>
+    <button class="btn-full" onclick="doLogin()">Login</button>
+    <button class="btn-ghost" style="width:100%;margin-top:0.65rem;" onclick="closeAdmin()">Cancel</button>
+  </div>
+
+  <div class="admin-panel" id="admin-panel" style="display:none">
+    <div class="admin-header">
+      <div style="display:flex;align-items:center;gap:0.75rem;">
+        <h3>⚙ Admin Panel</h3>
+        <span class="live-badge" id="supabase-status">live</span>
+      </div>
+      <button class="close-btn" onclick="closeAdmin()">✕</button>
+    </div>
+    <div class="admin-tabs">
+      <button class="tab-btn active" onclick="goTab('content',this)">✏️ Content</button>
+      <button class="tab-btn" onclick="goTab('settings',this)">🔗 Settings</button>
+      <button class="tab-btn" onclick="goTab('registrants',this)">👥 Registrants</button>
+    </div>
+
+    <!-- CONTENT TAB -->
+    <div class="tab-pane active" id="tab-content">
+      <div class="esec">Hero</div>
+      <div class="edit-group"><label>Badge text</label><input type="text" id="a-badge"/></div>
+      <div class="edit-group"><label>Headline (line 1)</label><input type="text" id="a-h1"/></div>
+      <div class="edit-group"><label>Headline accent (blue)</label><input type="text" id="a-accent"/></div>
+      <div class="edit-group"><label>Sub-headline</label><textarea id="a-sub" rows="3"></textarea></div>
+      <div class="esec">Features Section</div>
+      <div class="edit-group"><label>Title</label><input type="text" id="a-ftitle"/></div>
+      <div class="edit-group"><label>Sub-title</label><textarea id="a-fsub" rows="2"></textarea></div>
+      <div class="esec">Cards</div>
+      <div class="two-col">
+        <div class="edit-group"><label>Card 1 title</label><input type="text" id="a-c1t"/></div>
+        <div class="edit-group"><label>Card 1 text</label><input type="text" id="a-c1d"/></div>
+        <div class="edit-group"><label>Card 2 title</label><input type="text" id="a-c2t"/></div>
+        <div class="edit-group"><label>Card 2 text</label><input type="text" id="a-c2d"/></div>
+        <div class="edit-group"><label>Card 3 title</label><input type="text" id="a-c3t"/></div>
+        <div class="edit-group"><label>Card 3 text</label><input type="text" id="a-c3d"/></div>
+        <div class="edit-group"><label>Card 4 title</label><input type="text" id="a-c4t"/></div>
+        <div class="edit-group"><label>Card 4 text</label><input type="text" id="a-c4d"/></div>
+        <div class="edit-group"><label>Card 5 title</label><input type="text" id="a-c5t"/></div>
+        <div class="edit-group"><label>Card 5 text</label><input type="text" id="a-c5d"/></div>
+        <div class="edit-group"><label>Card 6 title</label><input type="text" id="a-c6t"/></div>
+        <div class="edit-group"><label>Card 6 text</label><input type="text" id="a-c6d"/></div>
+      </div>
+      <div class="esec">Pricing</div>
+      <div class="two-col">
+        <div class="edit-group"><label>Price</label><input type="text" id="a-price"/></div>
+        <div class="edit-group"><label>Price note</label><input type="text" id="a-pnote"/></div>
+      </div>
+      <div class="edit-group"><label>Feature 1</label><input type="text" id="a-f1"/></div>
+      <div class="edit-group"><label>Feature 2</label><input type="text" id="a-f2"/></div>
+      <div class="edit-group"><label>Feature 3</label><input type="text" id="a-f3"/></div>
+      <div class="edit-group"><label>Feature 4</label><input type="text" id="a-f4"/></div>
+      <div class="edit-group"><label>Feature 5</label><input type="text" id="a-f5"/></div>
+      <div class="esec">Post-Payment Message</div>
+      <div class="edit-group"><label>Booking confirmation text</label><textarea id="a-bkmsg" rows="2"></textarea></div>
+      <div class="esec">Footer</div>
+      <div class="two-col">
+        <div class="edit-group"><label>Brand name</label><input type="text" id="a-fbrand"/></div>
+        <div class="edit-group"><label>Footer text</label><input type="text" id="a-ftext"/></div>
+      </div>
+      <div class="save-bar">
+        <span class="toast" id="t-content">✓ Saved!</span>
+        <button class="btn-ghost" onclick="resetAll()">Reset defaults</button>
+        <button class="btn-save" onclick="saveContent()">Save changes</button>
+      </div>
+    </div>
+
+    <!-- SETTINGS TAB -->
+    <div class="tab-pane" id="tab-settings">
+      <div class="esec">Supabase Connection</div>
+      <div class="info-box">
+        <strong>🔌 Connect your Supabase project</strong><br/>
+        Find these in <strong>Supabase → Settings → API</strong>.<br/>
+        The <strong>anon key</strong> is used by this page to verify payments.<br/>
+        The <strong>webhook function URL</strong> goes into Fire's webhook dashboard.
+      </div>
+      <div class="edit-group"><label>Supabase Project URL</label><input type="url" id="s-sb-url" placeholder="https://ocsiqateijkxsalwsiip.supabase.co"/></div>
+      <div class="edit-group"><label>Supabase Anon Key</label><input type="text" id="s-sb-anon" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."/></div>
+
+      <div class="esec">Fire Webhook URL</div>
+      <div class="info-box">
+        <strong>🔥 Add this URL to Fire → Settings → API → Webhooks:</strong><br/>
+        <code id="webhook-url-display">https://ocsiqateijkxsalwsiip.supabase.co/functions/v1/fire-webhook</code><br/><br/>
+        Select event type: <strong>PAYMENT_REQUEST_PAYMENT_AUTHORISED</strong> (and optionally LODGEMENT)
+      </div>
+
+      <div class="esec">Booking Link</div>
+      <div class="edit-group">
+        <label>Zoom / Calendly URL</label>
+        <input type="url" id="s-zoom" placeholder="https://scheduler.zoom.us/paddy-farren/chat-with-paddy-"/>
+        <p style="font-size:0.78rem;color:var(--muted);margin-top:0.4rem;">Only shown after payment is verified.</p>
+      </div>
+
+      <div class="esec">Payment Link</div>
+      <div class="edit-group">
+        <label>Fire Payment Link</label>
+        <input type="url" id="s-pay" placeholder="https://payments.fire.com/jqwb3y99"/>
+      </div>
+
+      <div class="esec">Change Admin Password</div>
+      <div class="edit-group"><label>Current password</label><input type="password" id="s-cur-pw" placeholder="Current password"/></div>
+      <div class="edit-group"><label>New password</label><input type="password" id="s-new-pw" placeholder="New password"/></div>
+      <div class="edit-group"><label>Confirm new password</label><input type="password" id="s-con-pw" placeholder="Confirm"/></div>
+      <div class="err" id="pw-chg-err" style="margin-bottom:0.5rem;"></div>
+      <div class="save-bar">
+        <span class="toast" id="t-settings">✓ Saved!</span>
+        <button class="btn-save" onclick="saveSettings()">Save settings</button>
+      </div>
+    </div>
+
+    <!-- REGISTRANTS TAB -->
+    <div class="tab-pane" id="tab-registrants">
+      <div class="stats">
+        <div class="stat-box"><div class="n" id="s-total">—</div><div class="l">Total paid</div></div>
+        <div class="stat-box"><div class="n" id="s-today">—</div><div class="l">Today</div></div>
+        <div class="stat-box"><div class="n" id="s-rev">—</div><div class="l">Revenue</div></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+        <h4 style="font-weight:700;font-size:0.95rem;">Paid Registrants <span id="reg-source" style="font-size:0.75rem;font-weight:500;color:var(--muted)"></span></h4>
+        <button class="btn-ghost" style="font-size:0.8rem;padding:0.4rem 0.85rem;" onclick="exportCSV()">⬇ Export CSV</button>
+      </div>
+      <div id="reg-wrap"><div class="empty-reg"><div style="font-size:2rem;margin-bottom:0.5rem">⏳</div><p>Loading...</p></div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+// CONFIG — filled from localStorage / admin panel
+// ══════════════════════════════════════════════
+const D = {
+  badge:'Now accepting new clients', h1:'The power of one', accent:'AI consultancy',
+  sub:'Hands-on AI strategy, implementation, and transformation for ambitious businesses. Tailored to your goals, powered by real expertise.',
+  ftitle:'Everything you need to move fast with AI',
+  fsub:'One focused session, zero fluff. Walk away with a clear roadmap you can act on immediately.',
+  c1t:'AI Strategy Audit', c1d:'A full review of where AI can create the most leverage in your business — prioritised and ranked.',
+  c2t:'90-Day Roadmap', c2d:'A concrete plan with tools, timelines, and quick wins to start generating ROI within weeks.',
+  c3t:'Tool Selection', c3d:'Cut through the noise. Get clear recommendations on the right AI tools for your stack and budget.',
+  c4t:'Post-Session Support', c4d:'A written summary plus 7 days of follow-up questions via email.',
+  c5t:'Prompt Engineering', c5d:'Custom prompts and workflows built live during the call that you can deploy immediately.',
+  c6t:'Implementation Plan', c6d:'Step-by-step guidance your team can follow — no PhD in AI required.',
+  price:'£60', pnote:'One-time payment · 60-minute Zoom call',
+  f1:'AI Strategy Audit for your business', f2:'Custom 90-day AI roadmap',
+  f3:'Tool recommendations & prompt templates', f4:'Written session summary after call',
+  f5:'7 days email follow-up support',
+  bkmsg:"Now pick your time slot and we'll get a Zoom invite in your inbox straight away.",
+  fbrand:'AIStrategy.co', ftext:'© 2026 · All rights reserved · hello@aistrategy.co',
+  payLink:'https://payments.fire.com/jqwb3y99',
+  zoomLink:'https://scheduler.zoom.us/paddy-farren/chat-with-paddy-',
+  sbUrl:'https://ocsiqateijkxsalwsiip.supabase.co',
+  sbAnon:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9jc2lxYXRlaWpreHNhbHdzaWlwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNTQwMDIsImV4cCI6MjA4ODczMDAwMn0.8as4FyJO3umFL3b5JEWHk39TK4zupNtdRh_FpxPTObo', // ADD YOUR ANON KEY IN ADMIN → SETTINGS
+  adminPw:'admin123'
+};
+
+function ls(){ try{ return JSON.parse(localStorage.getItem('ai_site')||'{}'); }catch{ return {}; } }
+function lsSet(o){ const c=ls(); localStorage.setItem('ai_site',JSON.stringify({...c,...o})); }
+function getC(){ const s=ls(); return {...D,...(s.content||{})}; }
+function getPw(){ return ls().adminPw||D.adminPw; }
+function t(id,v){ const e=document.getElementById(id); if(e&&v!=null) e.textContent=v; }
+
+function renderPage(){
+  const c=getC();
+  t('el-badge',c.badge); t('el-h1',c.h1); t('el-accent',c.accent); t('el-sub',c.sub);
+  t('el-ftitle',c.ftitle); t('el-fsub',c.fsub);
+  ['c1t','c1d','c2t','c2d','c3t','c3d','c4t','c4d','c5t','c5d','c6t','c6d'].forEach(k=>t(k,c[k]));
+  t('el-price',c.price); t('el-pnote',c.pnote); t('pay-price',c.price);
+  ['f1','f2','f3','f4','f5'].forEach(k=>t(k,c[k]));
+  t('el-booking-msg',c.bkmsg); t('el-fbrand',c.fbrand); t('el-ftext',c.ftext);
+  const zl=document.getElementById('zoom-link'); if(zl) zl.href=c.zoomLink||'#';
+  const pb=document.getElementById('pay-btn'); if(pb) pb.href=c.payLink;
+  // Update webhook URL display
+  const wu=document.getElementById('webhook-url-display');
+  if(wu) wu.textContent=`${c.sbUrl||D.sbUrl}/functions/v1/fire-webhook`;
+}
+
+// ── When pay button clicked, show verify box ──
+function onPayClick(){
+  // Open payment in new tab (default link behaviour)
+  // Show verify box after short delay
+  setTimeout(()=>{
+    const vb=document.getElementById('verify-box');
+    vb.classList.add('visible');
+    vb.scrollIntoView({behavior:'smooth', block:'center'});
+  }, 1500);
+}
+
+// ── Verify payment against Supabase ──
+async function checkPayment(){
+  const email = document.getElementById('verify-email').value.trim().toLowerCase();
+  const statusEl = document.getElementById('verify-status');
+  const btn = document.getElementById('verify-btn');
+
+  if(!email || !email.includes('@')){
+    statusEl.className='verify-status error';
+    statusEl.textContent='Please enter a valid email address.';
+    return;
+  }
+
+  const c = getC();
+  const sbUrl = c.sbUrl || D.sbUrl;
+  const sbAnon = c.sbAnon || D.sbAnon;
+
+  if(!sbAnon){
+    // No Supabase key yet — admin hasn't set it up
+    statusEl.className='verify-status error';
+    statusEl.textContent='⚠ Payment verification not yet configured. Please contact us directly.';
+    return;
+  }
+
+  btn.disabled = true;
+  statusEl.className='verify-status checking';
+  statusEl.textContent='⏳ Checking your payment...';
+
+  try {
+    const res = await fetch(
+      `${sbUrl}/functions/v1/fire-webhook?check=${encodeURIComponent(email)}`,
+      { headers: { 'Authorization': `Bearer ${sbAnon}` } }
+    );
+    const data = await res.json();
+
+    if(data.paid){
+      statusEl.textContent='';
+      const name = data.payment?.name || '';
+      showBooking(name);
+      document.getElementById('verify-box').style.display='none';
+    } else {
+      statusEl.className='verify-status error';
+      statusEl.textContent="❌ No confirmed payment found for this email. If you just paid, please wait a moment and try again.";
+      btn.disabled = false;
+    }
+  } catch(e){
+    statusEl.className='verify-status error';
+    statusEl.textContent='⚠ Could not connect to payment server. Please try again.';
+    btn.disabled = false;
+  }
+}
+
+function showBooking(name){
+  const b=document.getElementById('booking-section');
+  b.classList.add('visible');
+  if(name) t('booking-title',`🎉 Welcome ${name.split(' ')[0]}! You're all set.`);
+  b.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+// ── Admin ──
+function openAdmin(){
+  document.getElementById('overlay').classList.add('open');
+  document.getElementById('login-modal').style.display='';
+  document.getElementById('admin-panel').style.display='none';
+  document.getElementById('pw-input').value='';
+  document.getElementById('pw-err').style.display='none';
+}
+function closeAdmin(){ document.getElementById('overlay').classList.remove('open'); }
+function bgClick(e){ if(e.target===document.getElementById('overlay')) closeAdmin(); }
+
+function doLogin(){
+  const pw=document.getElementById('pw-input').value;
+  if(pw===getPw()){
+    document.getElementById('login-modal').style.display='none';
+    document.getElementById('admin-panel').style.display='';
+    loadFields(); goTab('content', document.querySelector('.tab-btn'));
+  } else {
+    document.getElementById('pw-err').style.display='block';
+    document.getElementById('pw-input').value='';
+  }
+}
+
+function goTab(tab,btn){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  document.getElementById('tab-'+tab).classList.add('active');
+  if(tab==='registrants') loadRegs();
+}
+
+function loadFields(){
+  const c=getC();
+  ['badge','h1','accent','sub','ftitle','fsub','c1t','c1d','c2t','c2d','c3t','c3d','c4t','c4d','c5t','c5d','c6t','c6d','price','pnote','f1','f2','f3','f4','f5','bkmsg','fbrand','ftext']
+    .forEach(k=>{ const e=document.getElementById('a-'+k); if(e) e.value=c[k]||''; });
+  const sv=(id,v)=>{ const e=document.getElementById(id); if(e) e.value=v||''; };
+  sv('s-sb-url', c.sbUrl); sv('s-sb-anon', c.sbAnon);
+  sv('s-zoom', c.zoomLink); sv('s-pay', c.payLink);
+  const wu=document.getElementById('webhook-url-display');
+  if(wu) wu.textContent=`${c.sbUrl||D.sbUrl}/functions/v1/fire-webhook`;
+}
+
+function saveContent(){
+  const keys=['badge','h1','accent','sub','ftitle','fsub','c1t','c1d','c2t','c2d','c3t','c3d','c4t','c4d','c5t','c5d','c6t','c6d','price','pnote','f1','f2','f3','f4','f5','bkmsg','fbrand','ftext'];
+  const upd={}; keys.forEach(k=>{ const e=document.getElementById('a-'+k); if(e) upd[k]=e.value; });
+  const s=ls(); lsSet({content:{...(s.content||{}),...upd}});
+  renderPage(); flash('t-content');
+}
+
+function saveSettings(){
+  const sbUrl=document.getElementById('s-sb-url').value.trim();
+  const sbAnon=document.getElementById('s-sb-anon').value.trim();
+  const zoom=document.getElementById('s-zoom').value.trim();
+  const pay=document.getElementById('s-pay').value.trim();
+  const curPw=document.getElementById('s-cur-pw').value;
+  const newPw=document.getElementById('s-new-pw').value;
+  const conPw=document.getElementById('s-con-pw').value;
+  const errEl=document.getElementById('pw-chg-err');
+  errEl.style.display='none';
+  if(newPw){
+    if(curPw!==getPw()){ errEl.textContent='Current password incorrect.'; errEl.style.display='block'; return; }
+    if(newPw!==conPw){ errEl.textContent='New passwords do not match.'; errEl.style.display='block'; return; }
+    lsSet({adminPw:newPw});
+    ['s-cur-pw','s-new-pw','s-con-pw'].forEach(id=>{ const e=document.getElementById(id); if(e) e.value=''; });
+  }
+  const s=ls(); lsSet({content:{...(s.content||{}),sbUrl,sbAnon,zoomLink:zoom,payLink:pay}});
+  renderPage(); flash('t-settings');
+}
+
+function resetAll(){
+  if(!confirm('Reset all content to defaults?')) return;
+  const s=ls(); delete s.content; localStorage.setItem('ai_site',JSON.stringify(s));
+  loadFields(); renderPage();
+}
+
+function flash(id){ const e=document.getElementById(id); if(!e) return; e.classList.add('show'); setTimeout(()=>e.classList.remove('show'),2200); }
+
+// ── Load registrants from Supabase ──
+async function loadRegs(){
+  const c=getC();
+  const sbUrl=c.sbUrl||D.sbUrl;
+  const sbAnon=c.sbAnon||D.sbAnon;
+  const wrap=document.getElementById('reg-wrap');
+
+  if(!sbAnon){
+    wrap.innerHTML=`<div class="empty-reg"><div style="font-size:2rem;margin-bottom:0.5rem">🔑</div><p style="font-weight:600">Supabase not connected</p><p style="font-size:0.85rem;margin-top:0.3rem">Add your Supabase URL and anon key in <strong>Settings</strong> to see live registrants.</p></div>`;
+    t('s-total','—'); t('s-today','—'); t('s-rev','—');
+    return;
+  }
+
+  wrap.innerHTML=`<div class="empty-reg"><p>Loading from Supabase...</p></div>`;
+
+  try {
+    const res = await fetch(
+      `${sbUrl}/rest/v1/payments?select=*&status=eq.confirmed&order=paid_at.desc`,
+      { headers: { 'apikey': sbAnon, 'Authorization': `Bearer ${sbAnon}` } }
+    );
+    const regs = await res.json();
+
+    if(!Array.isArray(regs)) throw new Error('Bad response');
+
+    document.getElementById('reg-source').textContent = '(live from Supabase)';
+    const price=parseFloat((c.price||'£60').replace(/[^0-9.]/g,''))||60;
+    t('s-total', regs.length);
+    const today=new Date().toDateString();
+    t('s-today', regs.filter(r=>new Date(r.paid_at).toDateString()===today).length);
+    t('s-rev','£'+(regs.length*price).toLocaleString());
+
+    if(!regs.length){
+      wrap.innerHTML=`<div class="empty-reg"><div style="font-size:2.5rem;margin-bottom:0.75rem">📋</div><p style="font-weight:600">No confirmed payments yet</p><p style="font-size:0.85rem;margin-top:0.3rem">Payments will appear here once Fire sends the webhook.</p></div>`;
+      return;
+    }
+
+    wrap.innerHTML=`<table class="reg-table"><thead><tr><th>#</th><th>Name</th><th>Email</th><th>Date</th><th>Amount</th><th>Status</th></tr></thead><tbody>
+      ${regs.map((r,i)=>`<tr>
+        <td style="color:var(--muted)">${i+1}</td>
+        <td style="font-weight:600">${x(r.name||'—')}</td>
+        <td><a href="mailto:${x(r.email||'')}" style="color:var(--blue);text-decoration:none">${x(r.email||'—')}</a></td>
+        <td style="color:var(--muted)">${r.paid_at ? new Date(r.paid_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) : '—'}</td>
+        <td style="font-weight:700">${r.amount ? '£'+r.amount : c.price}</td>
+        <td><span class="badge-paid">Paid</span></td>
+      </tr>`).join('')}
+    </tbody></table>`;
+  } catch(e){
+    wrap.innerHTML=`<div class="empty-reg"><div style="font-size:2rem;margin-bottom:0.5rem">⚠️</div><p style="font-weight:600">Could not load from Supabase</p><p style="font-size:0.85rem;margin-top:0.3rem">Check your Supabase URL and anon key in Settings.</p></div>`;
+  }
+}
+
+async function exportCSV(){
+  const c=getC(); const sbUrl=c.sbUrl||D.sbUrl; const sbAnon=c.sbAnon||D.sbAnon;
+  if(!sbAnon){ alert('Connect Supabase first in Settings.'); return; }
+  try {
+    const res=await fetch(`${sbUrl}/rest/v1/payments?select=*&status=eq.confirmed&order=paid_at.desc`,
+      {headers:{'apikey':sbAnon,'Authorization':`Bearer ${sbAnon}`}});
+    const regs=await res.json();
+    if(!regs.length){ alert('No registrants to export.'); return; }
+    const rows=[['#','Name','Email','Date','Amount','Fire Ref']];
+    regs.forEach((r,i)=>rows.push([i+1,r.name||'',r.email||'',r.paid_at?new Date(r.paid_at).toLocaleDateString('en-GB'):'',r.amount||'',r.fire_ref||'']));
+    const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+    const a=document.createElement('a'); a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+    a.download='registrants.csv'; a.click();
+  } catch(e){ alert('Export failed. Check Supabase connection.'); }
+}
+
+function x(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+document.addEventListener('DOMContentLoaded',()=>{ renderPage(); });
+</script>
+</body>
+</html>
