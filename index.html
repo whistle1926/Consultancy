@@ -255,7 +255,7 @@
 
 <footer>
   <p style="font-weight:700;margin-bottom:0.3rem" id="el-fbrand">AIStrategy.co</p>
-  <p id="el-ftext">© 2026 · All rights reserved · hello@aistrategy.co</p>
+  <p id="el-ftext">© 2026 · All rights reserved · <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="325a575e5e5d72535b414640534657554b1c515d">[email&#160;protected]</a></p>
 </footer>
 
 <!-- ══════════ ADMIN OVERLAY ══════════ -->
@@ -375,7 +375,7 @@
   </div>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ═══════════════════════════════════
 // CONFIG
 // ═══════════════════════════════════
@@ -568,9 +568,15 @@ function setStatus(el, msg, type){
 // CHECK RETURN FROM FIRE
 // ═══════════════════════════════════
 async function checkReturn(){
-  const params = new URLSearchParams(window.location.search);
-  const sessionId = params.get('session') || sessionStorage.getItem('pending_session');
-  const status = params.get('status');
+  // Fire returns params in the URL - sometimes after a hash, parse both
+  const fullUrl = window.location.href;
+  const queryString = fullUrl.includes('?') ? fullUrl.split('?')[1].split('#')[0] : '';
+  const hashString = fullUrl.includes('#') ? fullUrl.split('#')[1] : '';
+  const params = new URLSearchParams(queryString);
+  const hashParams = new URLSearchParams(hashString.includes('?') ? hashString.split('?')[1] : hashString);
+
+  const sessionId = params.get('session') || hashParams.get('session') || sessionStorage.getItem('pending_session');
+  const status = params.get('status') || hashParams.get('status');
 
   if(!sessionId || status !== 'success') return;
 
@@ -787,12 +793,4 @@ function x(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').r
 
 // ═══════════════════════════════════
 // INIT
-// ═══════════════════════════════════
-document.addEventListener('DOMContentLoaded', () => {
-  renderPage();
-  loadProducts();
-  checkReturn();
-});
-</script>
-</body>
-</html>
+// ═══�
