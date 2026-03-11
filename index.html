@@ -795,12 +795,12 @@ function x(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').r
 // ═══════════════════════════════════
 
 async function checkReturnFromPayment(){
-  const hash = window.location.hash || '';
-  const hashQuery = hash.includes('?') ? hash.split('?')[1] : '';
-  const params = new URLSearchParams(hashQuery);
+  const searchParams = new URLSearchParams(window.location.search);
+  const hashQuery = (window.location.hash.includes('?')) ? window.location.hash.split('?')[1] : '';
+  const hashParams = new URLSearchParams(hashQuery);
   
-  const session = params.get('session') || sessionStorage.getItem('pending_session');
-  const status = params.get('status');
+  const session = searchParams.get('session') || hashParams.get('session') || sessionStorage.getItem('pending_session');
+  const status = searchParams.get('status') || hashParams.get('status');
 
   if(!session || status !== 'success') return;
 
