@@ -676,6 +676,7 @@ async function loadAdminProducts(){
         </div>
         <div class="product-row-prices">£${p.price_gbp} / €${p.price_eur}</div>
         <div class="product-row-actions">
+          <button class="btn-ghost" style="font-size:0.78rem;padding:0.35rem 0.75rem" onclick="openEditProduct('${p.id}','${x(p.name)}','${x(p.description||'')}',${p.price_gbp},${p.price_eur},'${x(p.duration||'')}','${x(p.zoom_link||'')}')">Edit</button>
           <button class="btn-ghost" style="font-size:0.78rem;padding:0.35rem 0.75rem" onclick="toggleProduct('${p.id}',${!p.active})">${p.active?'Disable':'Enable'}</button>
           <button class="btn-danger" onclick="deleteProduct('${p.id}')">Delete</button>
         </div>
@@ -817,7 +818,52 @@ async function checkReturnFromPayment(){
   }
 }
 
+
+function openEditProduct(id,name,desc,gbp,eur,dur,zoom){
+  const existing = document.getElementById('edit-product-form');
+  if(existing) existing.remove();
+  const form = document.createElement('div');
+  form.id = 'edit-product-form';
+  form.style = 'margin-top:1rem;padding:1.25rem;background:#f8fafc;border:1px solid var(--border);border-radius:12px';
+  form.innerHTML = `<h4 style="font-weight:700;margin-bottom:1rem">Edit Product</h4>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.75rem">
+      <div><label style="font-size:0.78rem;font-weight:600;color:var(--muted);display:block;margin-bottom:0.25rem">NAME</label><input id="ep-name" value="${name}" style="width:100%;padding:0.5rem 0.75rem;border:1px solid var(--border);border-radius:6px;font-size:0.9rem"></div>
+      <div><label style="font-size:0.78rem;font-weight:600;color:var(--muted);display:block;margin-bottom:0.25rem">DURATION</label><input id="ep-dur" value="${dur}" style="width:100%;padding:0.5rem 0.75rem;border:1px solid var(--border);border-radius:6px;font-size:0.9rem"></div>
+    </div>
+    <div style="margin-bottom:0.75rem"><label style="font-size:0.78rem;font-weight:600;color:var(--muted);display:block;margin-bottom:0.25rem">DESCRIPTION</label><textarea id="ep-desc" style="width:100%;padding:0.5rem 0.75rem;border:1px solid var(--border);border-radius:6px;font-size:0.9rem;min-height:60px">${desc}</textarea></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 2fr;gap:0.75rem;margin-bottom:0.75rem">
+      <div><label style="font-size:0.78rem;font-weight:600;color:var(--muted);display:block;margin-bottom:0.25rem">PRICE GBP</label><input id="ep-gbp" type="number" value="${gbp}" style="width:100%;padding:0.5rem 0.75rem;border:1px solid var(--border);border-radius:6px;font-size:0.9rem"></div>
+      <div><label style="font-size:0.78rem;font-weight:600;color:var(--muted);display:block;margin-bottom:0.25rem">PRICE EUR</label><input id="ep-eur" type="number" value="${eur}" style="width:100%;padding:0.5rem 0.75rem;border:1px solid var(--border);border-radius:6px;font-size:0.9rem"></div>
+      <div><label style="font-size:0.78rem;font-weight:600;color:var(--muted);display:block;margin-bottom:0.25rem">ZOOM / CALENDLY LINK</label><input id="ep-zoom" value="${zoom}" style="width:100%;padding:0.5rem 0.75rem;border:1px solid var(--border);border-radius:6px;font-size:0.9rem"></div>
+    </div>
+    <div style="display:flex;gap:0.5rem">
+      <button onclick="saveEditProduct('${id}')" style="background:var(--blue);color:#fff;border:none;padding:0.5rem 1.25rem;border-radius:6px;font-weight:600;cursor:pointer">Save</button>
+      <button onclick="document.getElementById('edit-product-form').remove()" style="background:none;border:1px solid var(--border);padding:0.5rem 1.25rem;border-radius:6px;cursor:pointer">Cancel</button>
+    </div>`;
+  document.getElementById('admin-product-list').appendChild(form);
+  form.scrollIntoView({behavior:'smooth'});
+}
+async function saveEditProduct(id){
+  const { url, anon } = getSb();
+  const body = {
+    name: document.getElementById('ep-name').value.trim(),
+    description: document.getElementById('ep-desc').value.trim(),
+    price_gbp: parseFloat(document.getElementById('ep-gbp').value),
+    price_eur: parseFloat(document.getElementById('ep-eur').value),
+    duration: document.getElementById('ep-dur').value.trim(),
+    zoom_link: document.getElementById('ep-zoom').value.trim()
+  };
+  const res = await fetch(url+'/rest/v1/products?id=eq.'+id, {
+    method:'PATCH',
+    headers:{'apikey':anon,'Authorization':'Bearer '+anon,'Content-Type':'application/json'},
+    body: JSON.stringify(body)
+  });
+  if(res.ok){ document.getElementById('edit-product-form').remove(); loadAdminProducts(); loadProducts(); }
+  else { alert('Failed to save.'); }
+}
+
 // INIT
+
 loadProducts();
 checkReturnFromPayment();
 </script>
