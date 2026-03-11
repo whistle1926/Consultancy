@@ -196,7 +196,7 @@
 <nav>
   <div class="nav-logo" id="nav-logo">AI<span>Strategy</span>.co</div>
   <div class="nav-right">
-    <button class="admin-btn" onclick="openAdmin()">⚙ Admin</button>
+    <button class="admin-btn" onclick="openAdminPanel()">⚙ Admin</button>
     <a href="#pricing" class="nav-cta">Get started →</a>
   </div>
 </nav>
@@ -641,7 +641,7 @@ function showBookingSuccess(session){
 // ═══════════════════════════════════
 // ADMIN
 // ═══════════════════════════════════
-function openAdmin(){ document.getElementById('overlay').classList.add('open'); document.getElementById('login-modal').style.display=''; document.getElementById('admin-panel').style.display='none'; document.getElementById('pw-input').value=''; document.getElementById('pw-err').style.display='none'; }
+function openAdminPanel(){ document.getElementById('overlay').classList.add('open'); document.getElementById('login-modal').style.display=''; document.getElementById('admin-panel').style.display='none'; document.getElementById('pw-input').value=''; document.getElementById('pw-err').style.display='none'; }
 function closeAdmin(){ document.getElementById('overlay').classList.remove('open'); }
 function bgClick(e){ if(e.target===document.getElementById('overlay')) closeAdmin(); }
 function doLogin(){
