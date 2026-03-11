@@ -792,6 +792,31 @@ async function exportCSV(){
 function x(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 // ═══════════════════════════════════
+
+async function checkReturnFromPayment(){
+  const hash = window.location.hash || '';
+  const search = window.location.search || '';
+  const combined = hash + '&' + search;
+  const params = new URLSearchParams(combined.replace(/^[^?]*\?/,''));
+  const session = params.get('session');
+  const status = params.get('status');
+  if(!session || status !== 'success') return;
+  document.getElementById('pricing').scrollIntoView({behavior:'smooth'});
+  const { url, anon } = getSb();
+  for(let i=0; i<10; i++){
+    await new Promise(r=>setTimeout(r,2000));
+    try {
+      const res = await fetch(url+'/functions/v1/fire-webhook?session='+session, {headers:{'apikey':anon}});
+      const data = await res.json();
+      if(data.status === 'confirmed'){
+        const zoom = data.zoom_link || '';
+        document.getElementById('products-grid').innerHTML = '<div style="text-align:center;padding:3rem 1rem"><h2 style="font-size:1.75rem;font-weight:800;margin-bottom:0.5rem">Payment confirmed!</h2><p style="color:var(--muted);margin-bottom:2rem">Your session is booked.</p><a href="'+zoom+'" target="_blank" style="display:inline-block;background:var(--blue);color:#fff;padding:0.875rem 2rem;border-radius:8px;font-weight:700;text-decoration:none">Book your session</a></div>';
+        return;
+      }
+    } catch(e){}
+  }
+}
+
 // INIT
 loadProducts();
 checkReturnFromPayment();
