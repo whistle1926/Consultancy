@@ -530,7 +530,7 @@ async function startCheckout(productId, productName, priceGbp, priceEur){
   setStatus(statusEl,'⏳ Creating your payment...','loading');
 
   const { url, anon } = getSb();
-  const returnBase = window.location.href.split('?')[0];
+  const returnBase = window.location.origin + window.location.pathname;
 
   try {
     const res = await fetch(`${url}/functions/v1/create-payment`, {
