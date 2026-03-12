@@ -255,7 +255,7 @@
 
 <footer>
   <p style="font-weight:700;margin-bottom:0.3rem" id="el-fbrand">AIStrategy.co</p>
-  <p id="el-ftext">© 2026 · All rights reserved · hello@aistrategy.co</p>
+  <p id="el-ftext">© 2026 · All rights reserved · <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="8ae2efe6e6e5caebe3f9fef8ebfeefedf3a4e9e5">[email&#160;protected]</a></p>
 </footer>
 
 <!-- ADMIN OVERLAY -->
@@ -375,7 +375,7 @@
   </div>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ═══════════════════════════════════
 // CONFIG
 // ═══════════════════════════════════
@@ -618,11 +618,64 @@ async function loadAdminProducts(){
         </div>
         <div class="product-row-prices">£${p.price_gbp} / €${p.price_eur}</div>
         <div class="product-row-actions">
+          <button class="btn-ghost" style="font-size:0.78rem;padding:0.35rem 0.75rem" onclick="openEditProduct('${p.id}','${x(p.name)}','${x(p.description||'')}',${p.price_gbp},${p.price_eur},'${x(p.duration||'')}','${x(p.zoom_link||'')}')">Edit</button>
           <button class="btn-ghost" style="font-size:0.78rem;padding:0.35rem 0.75rem" onclick="toggleProduct('${p.id}',${!p.active})">${p.active?'Disable':'Enable'}</button>
           <button class="btn-danger" onclick="deleteProduct('${p.id}')">Delete</button>
         </div>
       </div>`).join('')}</div>`;
   } catch(e){ wrap.innerHTML='<p style="color:var(--red);font-size:0.85rem">Could not load products.</p>'; }
+}
+
+function openEditProduct(id, name, desc, gbp, eur, dur, zoom){
+  // Remove existing edit form if any
+  const existing = document.getElementById('edit-product-form');
+  if(existing) existing.remove();
+
+  const form = document.createElement('div');
+  form.id = 'edit-product-form';
+  form.className = 'add-product-form';
+  form.style.marginBottom = '1.5rem';
+  form.innerHTML = `
+    <div class="esec">Edit Product</div>
+    <div class="two-col">
+      <div class="eg"><label>Product name</label><input type="text" id="ep-name" value="${name}"/></div>
+      <div class="eg"><label>Duration</label><input type="text" id="ep-duration" value="${dur}"/></div>
+    </div>
+    <div class="eg"><label>Description</label><textarea id="ep-desc" rows="2">${desc}</textarea></div>
+    <div class="three-col">
+      <div class="eg"><label>Price GBP (£)</label><input type="number" id="ep-gbp" value="${gbp}" step="0.01"/></div>
+      <div class="eg"><label>Price EUR (€)</label><input type="number" id="ep-eur" value="${eur}" step="0.01"/></div>
+      <div class="eg"><label>Zoom / Calendly Link</label><input type="url" id="ep-zoom" value="${zoom}"/></div>
+    </div>
+    <div style="display:flex;gap:0.75rem;align-items:center;margin-top:0.5rem">
+      <button class="btn-save" onclick="saveEditProduct('${id}')">Save changes</button>
+      <button class="btn-ghost" onclick="document.getElementById('edit-product-form').remove()">Cancel</button>
+      <span class="toast" id="t-edit">✓ Saved!</span>
+    </div>`;
+  const wrap = document.getElementById('admin-product-list');
+  wrap.parentNode.insertBefore(form, wrap.nextSibling);
+  form.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+async function saveEditProduct(id){
+  const { url, anon } = getSb();
+  const name = document.getElementById('ep-name').value.trim();
+  const desc = document.getElementById('ep-desc').value.trim();
+  const gbp  = parseFloat(document.getElementById('ep-gbp').value);
+  const eur  = parseFloat(document.getElementById('ep-eur').value);
+  const dur  = document.getElementById('ep-duration').value.trim();
+  const zoom = document.getElementById('ep-zoom').value.trim();
+  if(!name||!gbp||!eur){ alert('Name, GBP price and EUR price are required.'); return; }
+  const res = await fetch(`${url}/rest/v1/products?id=eq.${id}`, {
+    method:'PATCH',
+    headers:{'apikey':anon,'Authorization':`Bearer ${anon}`,'Content-Type':'application/json'},
+    body: JSON.stringify({ name, description:desc, price_gbp:gbp, price_eur:eur, duration:dur, zoom_link:zoom })
+  });
+  if(res.ok){
+    flash('t-edit');
+    setTimeout(()=>{ document.getElementById('edit-product-form')?.remove(); }, 1000);
+    loadAdminProducts(); loadProducts();
+  } else { alert('Failed to save changes.'); }
 }
 
 async function addProduct(){
@@ -731,12 +784,4 @@ async function exportCSV(){
 
 function x(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-// ═══════════════════════════════════
-// INIT
-// ═══════════════════════════════════
-renderPage();
-loadProducts();
-checkReturnFromPayment();
-</script>
-</body>
-</html>
+// ═════════════════════════
