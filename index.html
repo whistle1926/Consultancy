@@ -641,7 +641,7 @@ function openEditProduct(id, name, desc, gbp, eur, dur, zoom){
       <div class="eg"><label>Product name</label><input type="text" id="ep-name" value="${name}"/></div>
       <div class="eg"><label>Duration</label><input type="text" id="ep-duration" value="${dur}"/></div>
     </div>
-    <div class="eg"><label>Description</label><textarea id="ep-desc" rows="2">${desc}</textarea></div>
+    <div class="eg"><label>Description</label><textarea id="ep-desc" rows="2"></textarea></div>
     <div class="three-col">
       <div class="eg"><label>Price GBP (£)</label><input type="number" id="ep-gbp" value="${gbp}" step="0.01"/></div>
       <div class="eg"><label>Price EUR (€)</label><input type="number" id="ep-eur" value="${eur}" step="0.01"/></div>
@@ -654,6 +654,7 @@ function openEditProduct(id, name, desc, gbp, eur, dur, zoom){
     </div>`;
   const wrap = document.getElementById('admin-product-list');
   wrap.parentNode.insertBefore(form, wrap.nextSibling);
+  document.getElementById('ep-desc').value = desc;
   form.scrollIntoView({behavior:'smooth', block:'nearest'});
 }
 
